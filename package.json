@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "npm test",
-    "start": "node server.js"
+    "start": "node index.js"
   },
   "author": "Shubham Thakur <sbmthakur@gmail.com>",
   "license": "MIT",
