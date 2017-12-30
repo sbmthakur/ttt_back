@@ -1,5 +1,5 @@
 const express = require("express");
-const { getdata } = require("./a.js"); 
+const { getdata } = require("./fetchData.js");
 const app = express();
 
 app.get("/:limit", (req, res) => {
