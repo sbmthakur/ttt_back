@@ -1,25 +1,14 @@
-var finalhandler = require('finalhandler')
-var http         = require('http')
-var Router       = require('router')
-let { getdata } = require('./a.js') 
-var router = Router()
-router.get('/test', function (req, res) {
-  res.setHeader('Content-Type', 'application/json')
-  //res.end('Hello World!')
-  getdata((err, result) => {
-// console.log(JSON.stringify(res))        
-res.end(JSON.stringify(result))
-  
-  });
-})
+const express = require("express");
+const { getdata } = require("./a.js"); 
+const app = express();
 
-router.get('/', function (req, res) {
-  res.setHeader('Content-Type', 'text/plain; charset=utf-8')
-            res.end('Hello World!')
+app.get("/:limit", (req, res) => {
+
+  const limit = req.params.limit;
+  res.setHeader("Content-Type", "application/json");
+  getdata(limit, (err, result) => {
+    res.end(JSON.stringify(result));
+  });
 });
- 
-var server = http.createServer(function(req, res) {
-  router(req, res, finalhandler(req, res))
-})
- 
-server.listen(process.env.PORT || 3000)
+
+app.listen(process.env.PORT || 3000);

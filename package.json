@@ -10,8 +10,12 @@
   "author": "Shubham Thakur <sbmthakur@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "express": "^4.16.2",
     "finalhandler": "^1.1.0",
     "lodash": "^4.17.4",
     "router": "^1.3.2"
+  },
+  "devDependencies": {
+    "eslint": "^4.14.0"
   }
 }
