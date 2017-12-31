@@ -1,13 +1,20 @@
 let http = require("http");
 let { orderBy } = require("lodash");
 
+/*
+ * Use local cache to improve performance slightly
+ */
+const cache = {
+  "etag": "",
+  "data": []
+};
+
 function getdata(limit, cb) {
   http.get("http://terriblytinytales.com/test.txt", (res) => {
     const {
         statusCode
     } = res;
     const contentType = res.headers["content-type"];
-
     let error;
     if (statusCode !== 200) {
       error = new Error("Request Failed.\n" + `Status Code: ${statusCode}`);
@@ -26,11 +33,24 @@ function getdata(limit, cb) {
 
     res.on("end", () => {
       try {
-          /*Replace line break and carriage return
-           * Replace hyperlinks, numbers and punctuations
-           * Replace / with spaces
-           * Replace space(s) with one single space
-           * Transform the string to lower case
+          
+        const etag = res.headers["etag"];
+
+          /* Check for change in the 'etag' response header
+           * If there is no change, we return the result 
+           * from cache. Otherwise, we perform the necessary
+           * operations on the result.
+           */
+
+        if (cache.etag === etag) {
+          return getDataFromCache(); 
+        }
+          /* Opertions performed on the result: 
+           *  Replace line break and carriage return
+           *  Replace hyperlinks, numbers and punctuations
+           *  Replace / with spaces
+           *  Replace space(s) with one single space
+           *  Transform the string to lower case
            */
         let formattedString = rawData.replace(/(\r\n|\n|\r)/gm," ").replace(/(http\S+|\S+@\S+|\S+\.com\S+|www\.\S+|[0-9]|,|\.|;|\?|–|"|\(|\))/g,"").replace(/\//g," ").replace(/\s+/g," ").toLowerCase();
         let arr = formattedString.split(" ");
@@ -44,7 +64,9 @@ function getdata(limit, cb) {
             result[word] = 1; 
           }
         }
+
         let newObj = [];
+
         for(let word in result) {
           let o = {
             "word": word,
@@ -52,8 +74,15 @@ function getdata(limit, cb) {
           }; 
           newObj.push(o);
         }
+
         const finalResult = orderBy(newObj,["count"], ["desc"]);
+
+        /* Set values for cache */
+        cache.etag = etag;
+        cache.data = finalResult;
+
         return cb(null, finalResult.slice(0, limit));
+
       } catch (e) {
         console.error(e.message);
       }
@@ -61,6 +90,10 @@ function getdata(limit, cb) {
   }).on("error", (e) => {
     console.error(`Got error: ${e.message}`);
   });
+
+  function getDataFromCache() {
+    return cb(null, cache.data.slice(0, limit)); 
+  }
 }
 
 module.exports.getdata = getdata;
