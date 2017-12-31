@@ -7,7 +7,7 @@ app.get("/:limit", (req, res) => {
   const limit = req.params.limit;
   res.setHeader("Content-Type", "application/json");
   getdata(limit, (err, result) => {
-    //res.header("Access-Control-Allow-Origin", "*.herokuapp.com");
+    res.header("Access-Control-Allow-Origin", "https://ttt-form.herokuapp.com");
     res.end(JSON.stringify(result));
   });
 });
