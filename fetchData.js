@@ -48,11 +48,11 @@ function getdata(limit, cb) {
         for(let word in result) {
           let o = {
             "word": word,
-            "value": result[word]
+            "count": result[word]
           }; 
           newObj.push(o);
         }
-        const finalResult = orderBy(newObj,["value"], ["desc"]);
+        const finalResult = orderBy(newObj,["count"], ["desc"]);
         return cb(null, finalResult.slice(0, limit));
       } catch (e) {
         console.error(e.message);
