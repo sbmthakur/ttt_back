@@ -66,7 +66,7 @@ function getdata(limit, cb) {
         }
 
         let newObj = [];
-
+        /* Format response */
         for(let word in result) {
           let o = {
             "word": word,
@@ -74,13 +74,14 @@ function getdata(limit, cb) {
           }; 
           newObj.push(o);
         }
-
+        /* Sort in descending order according to the count */
         const finalResult = orderBy(newObj,["count"], ["desc"]);
 
         /* Set values for cache */
         cache.etag = etag;
         cache.data = finalResult;
 
+        /* Only return required words and count */
         return cb(null, finalResult.slice(0, limit));
 
       } catch (e) {
@@ -89,6 +90,7 @@ function getdata(limit, cb) {
     });
   }).on("error", (e) => {
     console.error(`Got error: ${e.message}`);
+    return cb("Internal Server Error. Please check the logs", null);
   });
 
   function getDataFromCache() {
@@ -97,16 +99,3 @@ function getdata(limit, cb) {
 }
 
 module.exports.getdata = getdata;
-/*
-fs.readFile("./test.txt",'utf8', (err, res) => {
-  //console.log('RRR: ', res.replace(/[\r\n]+/g," "));
-//  let aa = res.replace(/[\r\n]+/g," ")
- // let aa = res.replace(/[\r\n]+/g," ")
-  //let bb = aa.replace(/)
-
-          console.log(res.replace(/(\r\n|\n|\r)/gm," ").replace(/(http\S+|\S+@\S+|\S+\.com\S+|www\.\S+|[0-9]|,|\.|;|\?|–|"|\(|\))/g,'').replace(/\//g," ").replace(/\s+/g," ").toLowerCase())
-  //console.log(res.replace(/(\r\n|\n|\r)/gm," ").split(" "))
-          //console.log(res.replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ").replace(/(http\S+|\S+@\S+|\S+\.com\S+|[0-9]|\.|,|\?)/g,''))//replace(/(\.|\?|;|,|")/g,""));
-//console.log(res.replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ").replace(/(\?|[0-9])/g,"").replace(/\'s/g,""))
-})
-*/
