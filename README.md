@@ -39,7 +39,7 @@ node index.js
 
 Once the server is up, run the test with Mocha:
 ```
-./node_modules/mocha/bin/mocha tests/apiTests.js 
+npm test
 ```
 #### Libraries Used:
 
