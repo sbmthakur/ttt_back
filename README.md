@@ -41,6 +41,12 @@ Once the server is up, run the test with Mocha:
 ```
 ./node_modules/mocha/bin/mocha tests/apiTests.js 
 ```
-#### 
+#### Libraries Used:
+
+* express - For handling and routing requests.
+* lodash - For ordering data as per `count`
+* eslint - For linting code
+* gulp - For automating tasks 
+* gulp-eslint - Simplify lint through gulp
 
 Please report any issues that you may encounter. Suggestions are welcome.
